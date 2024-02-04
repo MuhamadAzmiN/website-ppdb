@@ -11,7 +11,10 @@ $mahasiswa = mysqli_query($conn, "SELECT * FROM siswa");
 $top = mysqli_query($conn, "SELECT jurusan, COUNT(*) as jumlah FROM siswa GROUP BY jurusan ORDER BY jumlah DESC");
 $pplg = 'pplg';
 
-
+$catatan = mysqli_query($conn, "SELECT * FROM catatan");
+$postingan = mysqli_query($conn, "SELECT * FROM postingan");
+$user = mysqli_query($conn, "SELECT * FROM user");
+$si = mysqli_fetch_assoc($catatan);
 
 
         $sql = "SELECT COUNT(*) as total FROM siswa WHERE jurusan='$pplg'";
@@ -107,53 +110,12 @@ $pplg = 'pplg';
         $jumlahpplg = $pul['total'];
 
 
-
-
-
-    
-            
+        $hitung = "SELECT COUNT(*) as total FROM catatan";
+        $hit = mysqli_query($conn, $hitung);
+        $hitung1 = mysqli_fetch_assoc($hit);
+        $jumlahPesan = $hitung1["total"];
         
-
-
-
-
-
-
-
-
-
-
-
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -423,7 +385,7 @@ $pplg = 'pplg';
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
+                                <span class="badge badge-danger badge-counter"><?= $jumlahPesan;?></span>
                             </a>
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -431,54 +393,20 @@ $pplg = 'pplg';
                                 <h6 class="dropdown-header">
                                     Message Center
                                 </h6>
+                                <?php foreach($catatan as $si):?>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
+                                    <img class="rounded-circle" src="img2/<?= $si["gambar"];?>" alt="Gambar Profil">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                                        <div class="text-truncate"><?= $si["catatan"];?></div>
+                                        <div class="small text-gray-500"><?= $si["nama"];?></div>
                                     </div>
                                 </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
+                                    
+                                <?php endforeach;?>
+            
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
                         </li>
@@ -513,9 +441,19 @@ $pplg = 'pplg';
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
-                                <a class="dropdown-item" href="gambar.php?id<?= $_SESSION["gambar"];?>">
+                    
+                                <a class="dropdown-item" href="gambar.php?id<?= $si["id"];?>">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     upload gambar
+                                </a>
+                                
+                                <a class="dropdown-item" href="catatan.php?id<?= $_SESSION["login_user"];?>">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Kasi catatan
+                                </a>
+                                <a class="dropdown-item" href="postingan.php?id<?= $_SESSION["login_user"];?>">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Kasi catatan
                                 </a>
                             </div>
                         </li>
@@ -701,41 +639,42 @@ $pplg = 'pplg';
 
                         <!-- Area Chart -->
                        
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">TJKT</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <img src="https://smkwikrama.sch.id/storage/1695788990-post.jpg" width="325px" alt="">
-                                    </div>
-                                    <div class="mt-1 text-center small">
-                                        A. Berdiri/Akreditasi: Program keahlian Teknik Jaringan Komputer dan Telekomunikasi sebelumnya bernama kompetensi keahlian Teknik Komputer dan Jaringan didirikan pada tahun 2004 dan sudah memiliki akreditasi A
+                        <div class="col-xl-4 col-lg-1">
+    <?php foreach($postingan as $post): ?>
+        <div class="card shadow mb-4 mb-3">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <img class="rounded-circle" src="img2/<?= $post["gambar"]; ?>" width="50px" alt="Gambar Profil">
+                    <h6 class="m-0 ml-2 font-weight-bold text-primary"><?= $post["nama"]; ?></h6>
+                </div>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                        aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Dropdown Header:</div>
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie pt-9 pb-7">
+                    <img src="https://smkwikrama.sch.id/storage/1695788990-post.jpg" width="100%" alt="">
+                </div>
+                <div class="mt-1 text-center small" style="max-height: 150px; overflow: auto;">
+                    <?= $post["catatan"]; ?>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
 
-                                        B. Keahlian: Peserta didik mampu menjadi seorang teknisi jaringan, administrasi jaringan, network engineer dan menguasai komunikasi. Menginstalasi perangkat komputer personal, menginstal sistem operasi dan aplikasi. Menginstal perangkat jaringan lokal (Local Area Network), menginstal perangkat jaringan berbasis luas (Wide Area Network).
-                                        </span>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->

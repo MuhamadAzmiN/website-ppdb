@@ -3,9 +3,38 @@ session_start();
 require 'function.php';
 
 $siswa = mysqli_query($conn2, "SELECT * FROM siswa2");
+$jumlahDataPerhalaman = 2;
+// cara pertama
+// $result = mysqli_query($conn2, "SELECT * FROM siswa2");
+// $jumlahData = mysqli_num_rows($result);
+// var_dump($jumlahData);
+
+
+// cara kedua 
+
+$jumlah = count(query2("SELECT * FROM siswa2"));
+
+$jumlahHalaman = $jumlah / $jumlahDataPerhalaman;
+$halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
+$awalData = ($jumlahDataPerhalaman * $halamanAktif)- $jumlahDataPerhalaman;
+$siswa = mysqli_query($conn2, "SELECT * FROM siswa2  LIMIT $awalData, $jumlahDataPerhalaman");
+
+
+// if(isset($_GET["halaman"])){
+// $halamanAktif = $_GET["halaman"];
+// }else {
+//     $halamanAktif = 1;
+// }
+
+
+//  pake kondisi ternary
+
+
+
 
 if(isset($_POST["tekan"])){
     $siswa = cari2($_POST["cari"]);
+        
    }
 
 if(isset($_POST["pilih"])){
@@ -555,6 +584,21 @@ $jumlahPerempuan = $row["total"];
                         <button name="tekan" class="btn btn-outline-success col-md-2 col-2 align-self-start ml-4"
                             type="submit">Search</button>
                     </form>
+                        <?php if($halamanAktif > 1):?>
+                            <a href="?halaman=<?= $halamanAktif -1;?>">&laquo</a>
+                            <?php endif ;?>
+                    <?php for($i = 1; $i <= $jumlahHalaman; $i++):?>
+                        <?php if($i == $halamanAktif) :?>
+                        <a href="?halaman=<?= $i;?>" style="font-weight:bold;color:red;"><?= $i;?></a>
+                        <?php else :?>
+                            <a href="?halaman=<?= $i;?>"><?= $i;?></a>
+                        <?php endif ;?>
+
+
+                        <?php endfor ;?>
+                        <?php if($halamanAktif < $jumlahHalaman):?>
+                            <a href="?halaman=<?= $halamanAktif + 1;?>">&laquo</a>
+                            <?php endif ;?>
                 </div>
 
         <!-- Dropdown Form -->

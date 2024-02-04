@@ -5,8 +5,11 @@ require 'function.php';
 
 if(isset($_POST["submit"])){
     if(regis($_POST)>0){
-        echo "<script>alert('userbaru di tambahkan')
-        document.location.href = 'login.php';</script>";
+        echo "<script>alert('userbaru di tambahkan');</script>";
+        header("Location: login.php");
+        exit;
+        $_SESSION["login"]= true;
+        
         }else {
         echo mysqli_error($conn);
     }

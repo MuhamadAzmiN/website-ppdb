@@ -1,8 +1,12 @@
 <?php
 
 session_start();
-require 'function.php';
 
+if(isset($_SESSION["login"])){
+    header("Location: index.php");
+    exit;
+}
+require 'function.php';
 // cara yang aman 
 
 if(isset($_COOKIE["id"])&& isset($_COOKIE["username"])){
@@ -17,17 +21,7 @@ if(isset($_COOKIE["id"])&& isset($_COOKIE["username"])){
 
 
 // cara yang gampang di hack hacker
-// if(isset($_COOKIE["login"])){
-//     if($_COOKIE["login"]== 'true'){
-//         $_SESSION["login"] = true;
-//     }
-// }
-// if(isset($_SESSION["login"])){
-//     echo "<script>alert('anda sudah login ke halaman utama jika ingin keluar silahkan logout');</script>";
-//     header("Location: index.php");
-//     exit;
-    
-// }
+
 
 
 if(isset($_POST["login"])){
@@ -43,7 +37,11 @@ if(isset($_POST["login"])){
             $_SESSION["login"]= true;
             $_SESSION['login_user'] = $row["nama"];
             $_SESSION["gambar"] = $row["gambar"];
+            $_SESSION["user"] = $row["id"];
+            $_SESSION["id"] = $row["id"];
 
+            
+                                                                                                                                                                               
             if(isset($_POST["remember"])){
                 setcookie('id', $row["id"], time()+60);
                 setcookie('key', hash('sha256',$row["username"]), time()+60);
@@ -136,7 +134,7 @@ if(isset($_POST["login"])){
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome anjing!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome</h1>
                                     </div>
                                     <?php if(isset($error)) : ?>
 
@@ -178,7 +176,7 @@ if(isset($_POST["login"])){
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                        <a class="small" href="forgot-password.php">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
                                         <a class="small" href="register.php">Create an Account!</a>

@@ -1,8 +1,38 @@
 <?php
 session_start();
 require 'function.php';
+//  paginationnn
+// konfigurasi
+$jumlahDataPerhalaman = 2;
+// cara pertama
+// $result = mysqli_query($conn2, "SELECT * FROM siswa2");
+// $jumlahData = mysqli_num_rows($result);
+// var_dump($jumlahData);
 
-$siswa = mysqli_query($conn2, "SELECT * FROM siswa2");
+
+// cara kedua 
+
+$jumlah = count(query2("SELECT * FROM siswa2"));
+
+$jumlahHalaman = $jumlah / $jumlahDataPerhalaman;
+$halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
+$awalData = ($jumlahDataPerhalaman * $halamanAktif)- $jumlahDataPerhalaman;
+$siswa = mysqli_query($conn2, "SELECT * FROM siswa2  LIMIT $awalData, $jumlahDataPerhalaman");
+
+
+// if(isset($_GET["halaman"])){
+// $halamanAktif = $_GET["halaman"];
+// }else {
+//     $halamanAktif = 1;
+// }
+
+
+//  pake kondisi ternary
+
+
+
+
+
 
 if(isset($_POST["tekan"])){
     $siswa = cari2($_POST["cari"]);
@@ -21,6 +51,7 @@ $re = mysqli_fetch_assoc($desain);
     // Tampilkan jumlah baris
 $jumlahdkv = $re['total'];
 $jumlahTotal = 10 - $jumlahdkv;;
+
 
 
 

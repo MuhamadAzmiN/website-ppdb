@@ -1,6 +1,5 @@
 <?php 
 
-
 $conn = mysqli_connect("localhost", "root", "", "siswa");
 $conn2 = mysqli_connect("localhost", "root","", "siswa2");
 
@@ -63,7 +62,6 @@ function transferData($id) {
         $sekolah = mysqli_real_escape_string($conn_db1, $row["sekolah"]);
         $gender = mysqli_real_escape_string($conn_db1, $row["gender"]);
         $gambar = mysqli_real_escape_string($conn_db1,$row['gambar']);
-
         // Use prepared statement for the insert query
         $sql_insert = "INSERT INTO siswa2 (nama, jurusan, email,nisn,sekolah,gender,gambar) 
                         VALUES (?, ?, ?,?,?,?,?) 
@@ -116,6 +114,7 @@ function pilih($options){
 function cari2($keyword){
     global $conn2;
     $query2 = "SELECT * FROM siswa2 WHERE
+                
                 nama LIKE '%$keyword%' OR 
                 jurusan LIKE '%$keyword%';
 
@@ -174,11 +173,14 @@ function upload(){
     $ekstensiGambar = explode(".", $namaFile);
     $ekstensiGambar = strtolower(end($ekstensiGambar));
 
+    $_SESSION["ekstensiGambarValid"] = $ekstensiGambarValid;
+    $_SESSION["ekstensiGambar"] = $ekstensiGambar;
 
-
-    if(!in_array($ekstensiGambar, $ekstensiGambarValid)){
-        echo "<script>alert('yang anda upload bukan gambar ');</script>";
+    if(!in_array($_SESSION["ekstensiGambar"], $_SESSION["ekstensiGambarValid"])){
+        echo "<script>alert('yang anda upload bukan gambar');</script>";
+        
         return false;
+
     }
     if($ukuranFile > 100000){
         echo "<script>alert('gambar terlalu besar    ');</script>";
@@ -260,17 +262,18 @@ function upload2(){
     $ekstensiGambarValid = ["jpg", "png", "jpeg"];
     $ekstensiGambar = explode(".", $namaFile);
     $ekstensiGambar = strtolower(end($ekstensiGambar));
-
+    $_SESSION['ekstensiGambar'] = $ekstensiGambar;
+    $_SESSION["ekstensigambarvalid"] = $ekstensiGambarValid;
 
 
     if(!in_array($ekstensiGambar, $ekstensiGambarValid)){
         echo "<script>alert('yang anda upload bukan gambar ');</script>";
         return false;
     }
-    if($ukuranFile > 100000){
-        echo "<script>alert('gambar terlalu besar    ');</script>";
-        return false;
-    }
+    // if($ukuranFile > 100000){
+    //     echo "<script>alert('gambar terlalu besar    ');</script>";
+    //     return false;
+    // }
 
 
     $namaFileBaru = uniqid();
@@ -323,11 +326,10 @@ function admin($data) {
 function ubah($data){
     global $conn;
 
-    $_SESSION["login_user"] = $data["nama"]; // Set session login_user
     $nama = $data["nama"]; 
-    $_SESSION["gambar"] = $data["gambarLama"]; // Ganti $data["gambarLama"] ke session
     $gambarLama = $data["gambarLama"];
     $gambarBaru = "";
+
     
     if ($_FILES["gambar"]["error"] === 4) {
         $gambarBaru = $gambarLama;
@@ -335,16 +337,105 @@ function ubah($data){
         $gambarBaru = upload2();
     }
     
+    $_SESSION["login_user"] = $nama; // Update session login_user
     $_SESSION["gambar"] = $gambarBaru; // Update session gambar
     
-    $query = "UPDATE user SET 
-                nama = '$nama',
-                gambar = '$gambarBaru'
-                ";
+    $query = "UPDATE user SET nama = '$nama', gambar = '$gambarBaru' WHERE id = '$_SESSION[user]'";
     
     $result = mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
 }
+function ganti($data){
+    global $conn;
+    $_SESSION["password"] = $data["password"];
+    $password = password_hash($data["password"], PASSWORD_DEFAULT);
+    $query = "UPDATE user SET 
+                password = '$password'
+                
+                ";
+
+                // if($password !== $konfir){
+                //     echo "<script>alert('konfirmasi password tidak sesuai');</script>";
+                //     return false;
+                // }
+                $result = mysqli_query($conn, $query);
+                return mysqli_affected_rows($conn);    
+}
+
+
+
+
+function catatan($data){
+    global $conn;
+    $catatan = $data["catatan"];
+    $nama = $data["nama"];
+    $gambar = $data["gambar"];
+
+    // if(!$gambar){
+    //     return false;
+    // }
+    
+
+    $query = "INSERT INTO catatan(catatan,nama,gambar) VALUES('$catatan', '$nama', '$gambar')";
+    $result = mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+function postingan($data){
+    global $conn;
+    $catatan = $data["catatan"];
+    $nama = $data["nama"];
+    $gambar = $data["gambar"];
+
+    // if(!$gambar){
+    //     return false;
+    // }
+    
+
+    $query = "INSERT INTO postingan(catatan,nama,gambar) VALUES('$catatan', '$nama', '$gambar')";
+    $result = mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+// function upload3(){
+//     $namaFile = $_FILES["gambar"]["name"];
+//     $ukuranFile = $_FILES["gambar"]["size"];
+//     $error = $_FILES["gambar"]["error"];
+//     $tmpName = $_FILES["gambar"]["tmp_name"];
+
+//     // pengecekan
+
+
+//     // if($error === 4){
+//     //     echo "<script>alert('upload gambar dulu dong ');</script>";
+//     //     return false;
+//     // }
+
+//     $ekstensiGambarValid = ["jpg", "png", "jpeg"];
+//     $ekstensiGambar = explode(".", $namaFile);
+//     $ekstensiGambar = strtolower(end($ekstensiGambar));
+
+//     $_SESSION["ekstensiGambarValid"] = $ekstensiGambarValid;
+//     $_SESSION["ekstensiGambar"] = $ekstensiGambar;
+
+//     if(!in_array($_SESSION["ekstensiGambar"], $_SESSION["ekstensiGambarValid"])){
+//         echo "<script>alert('yang anda upload bukan gambar');</script>";
+        
+//         return false;
+
+//     }
+//     // if($ukuranFile > 100000){
+//     //     echo "<script>alert('gambar terlalu besar    ');</script>";
+//     //     return false;
+//     // }
+
+
+//     $namaFileBaru = uniqid();
+//     $namaFileBaru .= '.';
+//     $namaFileBaru .= $ekstensiGambar;
+
+
+//     move_uploaded_file($tmpName, 'img2/' . $namaFileBaru);
+//     return $namaFileBaru;
+// }
 
 
 ?>
