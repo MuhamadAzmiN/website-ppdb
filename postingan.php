@@ -90,7 +90,6 @@ input[type="submit"]:hover {
 </style>
 <body>
 
-    <h1><?= $hasil;?>
         Halo 
         <?=$_SESSION['login_user'];?>
     
@@ -100,12 +99,15 @@ input[type="submit"]:hover {
     <form action="" method="post" enctype="multipart/form-data" class="max-w-md mx-auto my-8 p-8 bg-white rounded-md shadow-md">
     <input type="text" name="catatan" id="inputData" name="inputData" required>
     <input type="hidden" name="nama" value="<?= $_SESSION["login_user"];?>">
-    <input type="hidden" name="gambar" value="<?= $_SESSION["gambar"];?>">
+    <input type="hidden" name="gambar">
+    <input type="hidden" name="profil" value="<?= $_SESSION["gambar"];?>">
+
 
 
     <div class>
     </div>
     <div class="mb-6">
+        <input type="file" value="upload" name="gambar" class="bg-blue-500 text-white p-2 rounded-md cursor-pointer">
         <input type="submit" value="Upload" name="submit" class="bg-blue-500 text-white p-2 rounded-md cursor-pointer">
     </div>
 </form>

@@ -34,7 +34,11 @@ $siswa = mysqli_query($conn2, "SELECT * FROM siswa2  LIMIT $awalData, $jumlahDat
 
 if(isset($_POST["tekan"])){
     $siswa = cari2($_POST["cari"]);
+    $_SESSION["cari"] = $siswa;
+    
         
+   }else {
+    $_SESSION["cari"] = $siswa;
    }
 
 if(isset($_POST["pilih"])){
@@ -600,6 +604,23 @@ $jumlahPerempuan = $row["total"];
                             <a href="?halaman=<?= $halamanAktif + 1;?>">&laquo</a>
                             <?php endif ;?>
                 </div>
+                <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <?php if($halamanAktif > 1): ?>
+                    <li class="page-item"><a class="page-link" href="?halaman=<?= $halamanAktif - 1; ?>">Previous</a></li>
+                    <?php endif; ?>
+                    
+                    <?php for($i = 1; $i <= $jumlahHalaman; $i++): ?>
+                    <li class="page-item <?php echo ($i == $halamanAktif) ? 'active' : ''; ?>">
+                        <a class="page-link" href="?halaman=<?= $i; ?>"><?= $i; ?></a>
+                    </li>
+                    <?php endfor; ?>
+                    
+                    <?php if($halamanAktif < $jumlahHalaman): ?>
+                    <li class="page-item"><a class="page-link" href="?halaman=<?= $halamanAktif + 1; ?>">Next</a></li>
+                    <?php endif; ?>
+                </ul>
+                </nav>
 
         <!-- Dropdown Form -->
         <div class="col-md-6 mb-3">

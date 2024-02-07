@@ -85,10 +85,24 @@ function transferData($id) {
 
 
 
+function cari2($keyword){
+    global $conn2;
+    $query = "SELECT * FROM siswa WHERE
+                nama LIKE '%$keyword%' OR 
+                jurusan LIKE '%$keyword%';
+
+
+
+
+            ";
+            return query($query);
+}
 function cari($keyword){
     global $conn2;
     $query = "SELECT * FROM siswa WHERE
                 nama LIKE '%$keyword%' OR 
+                gender LIKE '%$keyword%' OR
+                sekolah LIKE '%$keyword%' OR
                 jurusan LIKE '%$keyword%';
 
 
@@ -111,19 +125,6 @@ function pilih($options){
 }
 
 
-function cari2($keyword){
-    global $conn2;
-    $query2 = "SELECT * FROM siswa2 WHERE
-                
-                nama LIKE '%$keyword%' OR 
-                jurusan LIKE '%$keyword%';
-
-
-
-
-            ";
-            return query2($query2);
-}
 
 
 function pilih2($options){
@@ -384,17 +385,65 @@ function postingan($data){
     global $conn;
     $catatan = $data["catatan"];
     $nama = $data["nama"];
-    $gambar = $data["gambar"];
+    $profil = $data["profil"];
+    $gambar = upload4();
+
 
     // if(!$gambar){
     //     return false;
     // }
     
 
-    $query = "INSERT INTO postingan(catatan,nama,gambar) VALUES('$catatan', '$nama', '$gambar')";
+    $query = "INSERT INTO postingan(catatan,nama,gambar,profil) VALUES('$catatan', '$nama', '$gambar', '$profil')";
     $result = mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
 }
+
+function upload4(){
+    global $conn;
+    $namaFile = $_FILES["gambar"]["name"];
+    $ukuranFile = $_FILES["gambar"]["size"];
+    $error = $_FILES["gambar"]["error"];
+    $tmpName = $_FILES["gambar"]["tmp_name"];
+
+    // pengecekan
+
+
+    if($error === 4){
+        echo "<script>alert('upload gambar dulu dong ');</script>";
+        return false;
+    }
+
+    $ekstensiGambarValid = ["jpg", "png", "jpeg"];
+    $ekstensiGambar = explode(".", $namaFile);
+    $ekstensiGambar = strtolower(end($ekstensiGambar));
+    $_SESSION['ekstensiGambar'] = $ekstensiGambar;
+    $_SESSION["ekstensigambarvalid"] = $ekstensiGambarValid;
+
+
+    if(!in_array($ekstensiGambar, $ekstensiGambarValid)){
+        echo "<script>alert('yang anda upload bukan gambar ');</script>";
+        return false;
+    }
+    // if($ukuranFile > 100000){
+    //     echo "<script>alert('gambar terlalu besar    ');</script>";
+    //     return false;
+    // }
+
+
+    $namaFileBaru = uniqid();
+    $namaFileBaru .= '.';
+    $namaFileBaru .= $ekstensiGambar;
+
+
+    move_uploaded_file($tmpName, 'img2/' . $namaFileBaru);
+    return $namaFileBaru;
+}
+
+
+
+
+
 // function upload3(){
 //     $namaFile = $_FILES["gambar"]["name"];
 //     $ukuranFile = $_FILES["gambar"]["size"];

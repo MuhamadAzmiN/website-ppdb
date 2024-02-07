@@ -400,8 +400,29 @@ $si = mysqli_fetch_assoc($catatan);
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <div class="text-truncate"><?= $si["catatan"];?></div>
-                                        <div class="small text-gray-500"><?= $si["nama"];?></div>
+                                        <div class="text-truncate">
+                                        <?php
+                                        $kalimat_sensored = $si["catatan"];
+                                        $kalimat_asli = $si["catatan"];
+
+                                        $kata_sensored = array("goblog", "babi", "anjing", "kanjut","kontol", "bangsat");
+
+                                        foreach ($kata_sensored as $kata) {
+                                            // Mengganti kata dengan tanda bintang sepanjang panjang kata
+                                            $kalimat_sensored = str_ireplace($kata, str_repeat("*", strlen($kata)), $kalimat_sensored);
+                                        }
+
+                                        if ($kalimat_sensored != $kalimat_asli) {
+                                            echo $kalimat_sensored;
+                                        } else {
+                                            // Jalankan kode selanjutnya karena tidak terdapat kata sensor
+                                            // ... (tulis kode selanjutnya di sini)
+                                            echo $si["catatan"];
+                                        }
+                                        ?>
+                                                                            
+                                                                            </div>
+                                                                            <div class="small text-gray-500"><?= $si["nama"];?> hahaha</div>
                                     </div>
                                 </a>
                                     
@@ -645,7 +666,7 @@ $si = mysqli_fetch_assoc($catatan);
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                    <img class="rounded-circle" src="img2/<?= $post["gambar"]; ?>" width="50px" alt="Gambar Profil">
+                    <img class="rounded-circle" src="img2/<?= $post["profil"];?>" width="50px" height= alt="Gambar Profil">
                     <h6 class="m-0 ml-2 font-weight-bold text-primary"><?= $post["nama"]; ?></h6>
                 </div>
                 <div class="dropdown no-arrow">
@@ -665,7 +686,7 @@ $si = mysqli_fetch_assoc($catatan);
             </div>
             <div class="card-body">
                 <div class="chart-pie pt-9 pb-7">
-                    <img src="https://smkwikrama.sch.id/storage/1695788990-post.jpg" width="100%" alt="">
+                    <img src="img2/<?= $post["gambar"];?>" width="100%" alt="">
                 </div>
                 <div class="mt-1 text-center small" style="max-height: 150px; overflow: auto;">
                     <?= $post["catatan"]; ?>

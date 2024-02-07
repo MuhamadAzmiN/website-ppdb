@@ -405,8 +405,8 @@ if(isset($_POST["pilih"])){
             
             <div class="col-md-6">
                 <form id="searchForm" class="d-flex" action="" method="post">
-                    <input class="form-control col-md-5 mb-3 col-4 align-self-start" type="search" name="keyword" placeholder="Search" aria-label="Search">
-                    <button name="submit" class="btn btn-outline-success col-md-2 col-2 align-self-start ml-4" type="submit">Search</button>
+                    <input class="form-control col-md-5 mb-3 col-4 align-self-start" type="search" id="keyword" name="keyword" placeholder="Search" aria-label="Search">
+                    <button name="submit" class="btn btn-outline-success col-md-2 col-2 align-self-start ml-4" id="tombol-cari" type="submit">Search</button>
                     
                 </form>
             </div>
@@ -434,7 +434,7 @@ if(isset($_POST["pilih"])){
         </div>
     </div>
 </div>
-
+<div id="container">
 <div class="table-responsive">
     <table class="table table-bordered table-striped" id="data" style="width: 80%;" cellspacing="0">
         <thead class="bg-primary text-white">
@@ -472,6 +472,7 @@ if(isset($_POST["pilih"])){
             <?php endforeach; ?>
         </tbody>
     </table>
+    </div>`
 </div>
 
     </div>
@@ -536,6 +537,7 @@ if(isset($_POST["pilih"])){
     
 
     <!-- Bootstrap core JavaScript-->
+    <script src="script.js"></script>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
